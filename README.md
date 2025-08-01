@@ -61,7 +61,7 @@ python3 main.py board.png --quiet
 |---|---|
 | ![Unsolvable](assets/examples/unsolvable_board.png) | *No valid solution exists due to region constraints* |
 
-*8x8 board with 7 regions - **Mathematically impossible***
+*8x8 board with 9 regions - **Mathematically impossible***
 
 ### 📊 Detailed Analysis
 
