@@ -1,27 +1,26 @@
-"""
-Advanced visualization for Queens puzzle solutions.
+"""Advanced visualization for Queens puzzle solutions.
 """
 
 import os
+from typing import Dict, List, Optional, Tuple
+
 import cv2
-import numpy as np
 import matplotlib.pyplot as plt
-from typing import List, Tuple, Dict, Optional
+import numpy as np
 
 from src.core.interfaces import ResultVisualizer
 from src.core.models import Region
 
 
 class QueensResultVisualizer(ResultVisualizer):
-    """
-    Advanced visualizer for Queens puzzle results.
+    """Advanced visualizer for Queens puzzle results.
     """
 
     def __init__(self):
         self.region_colors = [
             (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255),
             (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0),
-            (128, 0, 128), (0, 128, 128), (255, 128, 0), (128, 255, 0), (0, 255, 128)
+            (128, 0, 128), (0, 128, 128), (255, 128, 0), (128, 255, 0), (0, 255, 128),
         ]
         # Load queen image once and cache it
         self.queen_image = self._load_queen_image()
@@ -48,15 +47,14 @@ class QueensResultVisualizer(ResultVisualizer):
                  grid_lines: Tuple[List[int], List[int]],
                  regions: Dict[int, Region], output_dir: str = "output",
                  filename_prefix: str = "board") -> np.ndarray:
-        """
-        Create comprehensive visualization of the solution.
+        """Create comprehensive visualization of the solution.
         """
         fig, axes = plt.subplots(2, 2, figsize=(16, 16))
 
         # 1. Original image
         axes[0, 0].imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
-        axes[0, 0].set_title("Original Board Image", fontsize=14, fontweight='bold')
-        axes[0, 0].axis('off')
+        axes[0, 0].set_title("Original Board Image", fontsize=14, fontweight="bold")
+        axes[0, 0].axis("off")
 
         # 2. Grid detection
         grid_img = self._create_grid_image(original_image, grid_lines)
@@ -64,44 +62,42 @@ class QueensResultVisualizer(ResultVisualizer):
 
         h_lines, v_lines = grid_lines
         board_size = len(h_lines) - 1
-        axes[0, 1].set_title(f"Detected Grid ({board_size}x{board_size})", fontsize=14, fontweight='bold')
-        axes[0, 1].axis('off')
+        axes[0, 1].set_title(f"Detected Grid ({board_size}x{board_size})", fontsize=14, fontweight="bold")
+        axes[0, 1].axis("off")
 
         # 3. Regions visualization
         regions_img = self._create_regions_image(original_image, grid_lines, regions)
         axes[1, 0].imshow(cv2.cvtColor(regions_img, cv2.COLOR_BGR2RGB))
-        axes[1, 0].set_title(f"Color Regions ({len(regions)} detected)", fontsize=14, fontweight='bold')
-        axes[1, 0].axis('off')
+        axes[1, 0].set_title(f"Color Regions ({len(regions)} detected)", fontsize=14, fontweight="bold")
+        axes[1, 0].axis("off")
 
         # 4. Solution or error message
         if solution is not None:
             solution_img = self._create_solution_image(original_image, solution, grid_lines)
             axes[1, 1].imshow(cv2.cvtColor(solution_img, cv2.COLOR_BGR2RGB))
-            axes[1, 1].set_title("Solution with Queens", fontsize=14, fontweight='bold')
+            axes[1, 1].set_title("Solution with Queens", fontsize=14, fontweight="bold")
         else:
             axes[1, 1].text(0.5, 0.5, "NO SOLUTION\nFOUND",
-                           ha='center', va='center', fontsize=20, fontweight='bold',
-                           color='red', transform=axes[1, 1].transAxes)
-            axes[1, 1].set_title("No Valid Solution", fontsize=14, fontweight='bold')
-        axes[1, 1].axis('off')
+                           ha="center", va="center", fontsize=20, fontweight="bold",
+                           color="red", transform=axes[1, 1].transAxes)
+            axes[1, 1].set_title("No Valid Solution", fontsize=14, fontweight="bold")
+        axes[1, 1].axis("off")
 
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, f"{filename_prefix}_solution_analysis.png"),
-                   dpi=150, bbox_inches='tight')
+                   dpi=150, bbox_inches="tight")
         plt.close()
 
         # Return the final result image
         if solution is not None:
             return self._create_solution_image(original_image, solution, grid_lines)
-        else:
-            return self._create_no_solution_image(original_image, grid_lines, regions)
+        return self._create_no_solution_image(original_image, grid_lines, regions)
 
     def create_detailed_report(self, original_image: np.ndarray, solution: Optional[np.ndarray],
                              grid_lines: Tuple[List[int], List[int]], regions: Dict[int, Region],
                              solver_result, validation_errors: List[str] = None,
                              output_dir: str = "output", filename_prefix: str = "queens") -> None:
         """Create a detailed analysis report."""
-
         fig = plt.figure(figsize=(20, 12))
 
         # Create a more complex layout
@@ -110,34 +106,34 @@ class QueensResultVisualizer(ResultVisualizer):
         # Original image (top-left)
         ax1 = fig.add_subplot(gs[0, 0])
         ax1.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
-        ax1.set_title("Original Image", fontweight='bold')
-        ax1.axis('off')
+        ax1.set_title("Original Image", fontweight="bold")
+        ax1.axis("off")
 
         # Grid detection (top-center-left)
         ax2 = fig.add_subplot(gs[0, 1])
         grid_img = self._create_grid_image(original_image, grid_lines)
         ax2.imshow(cv2.cvtColor(grid_img, cv2.COLOR_BGR2RGB))
-        ax2.set_title("Grid Detection", fontweight='bold')
-        ax2.axis('off')
+        ax2.set_title("Grid Detection", fontweight="bold")
+        ax2.axis("off")
 
         # Regions (top-center-right)
         ax3 = fig.add_subplot(gs[0, 2])
         regions_img = self._create_regions_image(original_image, grid_lines, regions)
         ax3.imshow(cv2.cvtColor(regions_img, cv2.COLOR_BGR2RGB))
-        ax3.set_title("Color Regions", fontweight='bold')
-        ax3.axis('off')
+        ax3.set_title("Color Regions", fontweight="bold")
+        ax3.axis("off")
 
         # Solution or error (top-right)
         ax4 = fig.add_subplot(gs[0, 3])
         if solution is not None:
             solution_img = self._create_solution_image(original_image, solution, grid_lines)
             ax4.imshow(cv2.cvtColor(solution_img, cv2.COLOR_BGR2RGB))
-            ax4.set_title("Final Solution", fontweight='bold')
+            ax4.set_title("Final Solution", fontweight="bold")
         else:
-            ax4.text(0.5, 0.5, "NO SOLUTION", ha='center', va='center',
-                    fontsize=16, fontweight='bold', color='red')
-            ax4.set_title("Result", fontweight='bold')
-        ax4.axis('off')
+            ax4.text(0.5, 0.5, "NO SOLUTION", ha="center", va="center",
+                    fontsize=16, fontweight="bold", color="red")
+            ax4.set_title("Result", fontweight="bold")
+        ax4.axis("off")
 
         # Statistics and info (middle row)
         ax5 = fig.add_subplot(gs[1, :2])
@@ -152,11 +148,11 @@ class QueensResultVisualizer(ResultVisualizer):
         if solution is not None:
             self._add_solution_board_text(ax7, solution)
         else:
-            ax7.text(0.5, 0.5, "No solution to display", ha='center', va='center',
-                    fontsize=14, fontweight='bold')
+            ax7.text(0.5, 0.5, "No solution to display", ha="center", va="center",
+                    fontsize=14, fontweight="bold")
 
         plt.savefig(os.path.join(output_dir, f"{filename_prefix}_detailed_report.png"),
-                   dpi=150, bbox_inches='tight')
+                   dpi=150, bbox_inches="tight")
         plt.close()
 
     def _create_grid_image(self, image: np.ndarray, grid_lines: Tuple[List[int], List[int]]) -> np.ndarray:
@@ -341,9 +337,9 @@ SOLVER STATISTICS:
 """
 
         ax.text(0.05, 0.95, stats_text, transform=ax.transAxes, fontsize=10,
-               verticalalignment='top', fontfamily='monospace')
-        ax.set_title("Statistics", fontweight='bold')
-        ax.axis('off')
+               verticalalignment="top", fontfamily="monospace")
+        ax.set_title("Statistics", fontweight="bold")
+        ax.axis("off")
 
     def _add_validation_text(self, ax, validation_errors, solution, regions):
         """Add validation results to the plot."""
@@ -357,22 +353,22 @@ VALIDATION RESULTS:
 ✓ No adjacent queens
 ✓ Solution is valid!
 """
-            color = 'green'
+            color = "green"
         elif validation_errors:
             validation_text = "VALIDATION ERRORS:\n"
             for error in validation_errors[:10]:  # Show first 10 errors
                 validation_text += f"✗ {error}\n"
             if len(validation_errors) > 10:
                 validation_text += f"... and {len(validation_errors) - 10} more errors"
-            color = 'red'
+            color = "red"
         else:
             validation_text = "NO SOLUTION TO VALIDATE"
-            color = 'orange'
+            color = "orange"
 
         ax.text(0.05, 0.95, validation_text, transform=ax.transAxes, fontsize=10,
-               verticalalignment='top', fontfamily='monospace', color=color)
-        ax.set_title("Validation", fontweight='bold')
-        ax.axis('off')
+               verticalalignment="top", fontfamily="monospace", color=color)
+        ax.set_title("Validation", fontweight="bold")
+        ax.axis("off")
 
     def _add_solution_board_text(self, ax, solution):
         """Add text representation of the solution board."""
@@ -391,6 +387,6 @@ VALIDATION RESULTS:
             board_text += row_text + "\n"
 
         ax.text(0.5, 0.5, board_text, transform=ax.transAxes, fontsize=12,
-               ha='center', va='center', fontfamily='monospace')
-        ax.set_title("Solution Layout", fontweight='bold')
-        ax.axis('off')
+               ha="center", va="center", fontfamily="monospace")
+        ax.set_title("Solution Layout", fontweight="bold")
+        ax.axis("off")

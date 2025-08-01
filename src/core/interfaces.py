@@ -1,9 +1,9 @@
-"""
-Base interfaces and abstract classes for the Queen Solver system.
+"""Base interfaces and abstract classes for the Queen Solver system.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Dict, Optional
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 
 
@@ -12,21 +12,19 @@ class BoardDetector(ABC):
 
     @abstractmethod
     def detect_board_size(self, image: np.ndarray) -> int:
-        """
-        Detect the size of the board (n for nxn board).
+        """Detect the size of the board (n for nxn board).
 
         Args:
             image: Input image containing the board
 
         Returns:
             Size of the board
+
         """
-        pass
 
     @abstractmethod
     def detect_grid(self, image: np.ndarray, board_size: int) -> Tuple[List[int], List[int]]:
-        """
-        Detect the grid lines in the image.
+        """Detect the grid lines in the image.
 
         Args:
             image: Input image
@@ -34,8 +32,8 @@ class BoardDetector(ABC):
 
         Returns:
             Tuple of (horizontal_lines, vertical_lines)
+
         """
-        pass
 
 
 class RegionExtractor(ABC):
@@ -44,8 +42,7 @@ class RegionExtractor(ABC):
     @abstractmethod
     def extract_regions(self, image: np.ndarray, grid_lines: Tuple[List[int], List[int]],
                        board_size: int) -> Dict[int, List[Tuple[int, int]]]:
-        """
-        Extract colored regions from the board.
+        """Extract colored regions from the board.
 
         Args:
             image: Input image
@@ -54,8 +51,8 @@ class RegionExtractor(ABC):
 
         Returns:
             Dictionary mapping region_id to list of (row, col) positions
+
         """
-        pass
 
 
 class PuzzleSolver(ABC):
@@ -63,8 +60,7 @@ class PuzzleSolver(ABC):
 
     @abstractmethod
     def solve(self, board_size: int, regions: Dict[int, List[Tuple[int, int]]]) -> Optional[np.ndarray]:
-        """
-        Solve the Queens puzzle.
+        """Solve the Queens puzzle.
 
         Args:
             board_size: Size of the board
@@ -72,8 +68,8 @@ class PuzzleSolver(ABC):
 
         Returns:
             Solution matrix or None if no solution exists
+
         """
-        pass
 
 
 class SolutionValidator(ABC):
@@ -81,8 +77,7 @@ class SolutionValidator(ABC):
 
     @abstractmethod
     def validate(self, solution: np.ndarray, regions: Dict[int, List[Tuple[int, int]]]) -> bool:
-        """
-        Validate a solution.
+        """Validate a solution.
 
         Args:
             solution: Solution matrix
@@ -90,8 +85,8 @@ class SolutionValidator(ABC):
 
         Returns:
             True if solution is valid, False otherwise
+
         """
-        pass
 
 
 class ResultVisualizer(ABC):
@@ -101,8 +96,7 @@ class ResultVisualizer(ABC):
     def visualize(self, original_image: np.ndarray, solution: Optional[np.ndarray],
                  grid_lines: Tuple[List[int], List[int]],
                  regions: Dict[int, List[Tuple[int, int]]]) -> np.ndarray:
-        """
-        Create visualization of the solution.
+        """Create visualization of the solution.
 
         Args:
             original_image: Original input image
@@ -112,5 +106,5 @@ class ResultVisualizer(ABC):
 
         Returns:
             Visualization image
+
         """
-        pass

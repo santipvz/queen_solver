@@ -1,19 +1,16 @@
-"""
-Advanced region extraction using color clustering and validation.
+"""Advanced region extraction using color clustering and validation.
 """
 
-import cv2
+from typing import Dict, List, Tuple
+
 import numpy as np
-from typing import List, Tuple, Dict
-from collections import Counter
 
 from src.core.interfaces import RegionExtractor
 from src.core.models import Region
 
 
 class ColorBasedRegionExtractor(RegionExtractor):
-    """
-    Extract regions based on color similarity with advanced validation.
+    """Extract regions based on color similarity with advanced validation.
     """
 
     def __init__(self, color_tolerance: int = 40):
@@ -22,8 +19,7 @@ class ColorBasedRegionExtractor(RegionExtractor):
 
     def extract_regions(self, image: np.ndarray, grid_lines: Tuple[List[int], List[int]],
                        board_size: int) -> Dict[int, Region]:
-        """
-        Extract colored regions with improved validation.
+        """Extract colored regions with improved validation.
         """
         h_lines, v_lines = grid_lines
 
@@ -44,7 +40,7 @@ class ColorBasedRegionExtractor(RegionExtractor):
                 id=region_id,
                 positions=positions,
                 color=avg_color,
-                size=len(positions)
+                size=len(positions),
             )
 
         return regions
@@ -92,7 +88,7 @@ class ColorBasedRegionExtractor(RegionExtractor):
                                 board_size: int) -> Dict[int, List[Tuple[int, int]]]:
         """Find the best color grouping using multiple tolerances."""
         best_regions = None
-        best_score = float('inf')
+        best_score = float("inf")
 
         for tolerance in self.tolerance_range:
             regions = self._cluster_colors(cell_colors, cell_positions, tolerance)
@@ -152,7 +148,7 @@ class ColorBasedRegionExtractor(RegionExtractor):
                                 expected_count: int) -> float:
         """Evaluate the quality of region grouping."""
         if not regions:
-            return float('inf')
+            return float("inf")
 
         # Penalize difference in region count
         count_penalty = abs(len(regions) - expected_count) * 10
@@ -181,8 +177,7 @@ class ColorBasedRegionExtractor(RegionExtractor):
 
         if current_count > target_count:
             return self._merge_regions(regions, target_count)
-        else:
-            return self._split_regions(regions, target_count)
+        return self._split_regions(regions, target_count)
 
     def _merge_regions(self, regions: Dict[int, List[Tuple[int, int]]],
                       target_count: int) -> Dict[int, List[Tuple[int, int]]]:

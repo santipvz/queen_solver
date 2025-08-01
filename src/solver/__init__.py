@@ -1,3 +1,2 @@
-"""
-Solver algorithms module for Queens puzzle resolution.
+"""Solver algorithms module for Queens puzzle resolution.
 """

@@ -1,28 +1,19 @@
-"""
-Queens puzzle solver using backtracking with validation.
-"""
+"""Queens puzzle solver using backtracking with validation."""
+
+import time
 
 import numpy as np
-import time
-from typing import Dict, Optional
 
 from src.core.interfaces import PuzzleSolver
 from src.core.models import Region, SolverResult
 
 
 class BacktrackingQueensSolver(PuzzleSolver):
-    """
-    Queens puzzle solver using backtracking algorithm with comprehensive validation.
-    """
-
-    def __init__(self):
+    def __init__(self) -> None:
         self.iteration_count = 0
-        self.max_iterations = 100000
+        self.max_iterations = 10000000
 
-    def solve(self, board_size: int, regions: Dict[int, Region]) -> SolverResult:
-        """
-        Solve the Queens puzzle with comprehensive validation.
-        """
+    def solve(self, board_size: int, regions: dict[int, Region]) -> SolverResult:
         start_time = time.time()
         self.iteration_count = 0
 
@@ -34,7 +25,7 @@ class BacktrackingQueensSolver(PuzzleSolver):
                 execution_time=time.time() - start_time,
                 iterations=0,
                 validation_passed=False,
-                error_message="Puzzle cannot have a valid solution"
+                error_message="Puzzle cannot have a valid solution",
             )
 
         # Create region mapping for quick lookup
@@ -53,36 +44,20 @@ class BacktrackingQueensSolver(PuzzleSolver):
                 execution_time=time.time() - start_time,
                 iterations=self.iteration_count,
                 validation_passed=validation_passed,
-                error_message=None if validation_passed else "Solution found but validation failed"
+                error_message=None if validation_passed else "Solution found but validation failed",
             )
 
-        # Try with relaxed constraints
-        solution = np.zeros((board_size, board_size), dtype=int)
-        self.iteration_count = 0
-
-        if self._solve_backtracking_basic(solution, 0, board_size):
-            validation_passed = self._post_validate_solution(solution, board_size, regions)
-
-            return SolverResult(
-                success=True,
-                solution=solution,
-                execution_time=time.time() - start_time,
-                iterations=self.iteration_count,
-                validation_passed=validation_passed,
-                error_message="Solution found with relaxed constraints"
-            )
-
-        # No solution found
+        # No solution found with full constraints - don't try relaxed mode for now
         return SolverResult(
             success=False,
             solution=None,
             execution_time=time.time() - start_time,
             iterations=self.iteration_count,
             validation_passed=False,
-            error_message="No valid solution exists"
+            error_message="No valid solution exists with current constraints",
         )
 
-    def _pre_validate_solvability(self, board_size: int, regions: Dict[int, Region]) -> bool:
+    def _pre_validate_solvability(self, board_size: int, regions: dict[int, Region]) -> bool:
         """Validate if puzzle can have a solution before solving."""
         # Must have exactly n regions for nxn board
         if len(regions) != board_size:
@@ -98,9 +73,7 @@ class BacktrackingQueensSolver(PuzzleSolver):
         # it may create impossible situations
         return self._validate_region_conflicts(regions)
 
-    def _validate_region_conflicts(self, regions: Dict[int, Region]) -> bool:
-        """Check for region conflicts that make puzzle unsolvable."""
-        # Group regions by columns and rows they occupy
+    def _validate_region_conflicts(self, regions: dict[int, Region]) -> bool:
         column_regions = {}
         row_regions = {}
 
@@ -114,11 +87,9 @@ class BacktrackingQueensSolver(PuzzleSolver):
                 column_regions[c].append(region_id)
                 row_regions[r].append(region_id)
 
-        # Check for impossible column configurations
         for col, region_ids in column_regions.items():
             unique_regions = list(set(region_ids))
             if len(unique_regions) > 1:
-                # Multiple regions in same column
                 region_sizes = [regions[rid].size for rid in unique_regions]
 
                 # If there's a single-cell region with other small regions in same column,
@@ -128,7 +99,7 @@ class BacktrackingQueensSolver(PuzzleSolver):
 
         return True
 
-    def _create_region_map(self, board_size: int, regions: Dict[int, Region]) -> np.ndarray:
+    def _create_region_map(self, board_size: int, regions: dict[int, Region]) -> np.ndarray:
         """Create a 2D array mapping each cell to its region ID."""
         region_map = np.zeros((board_size, board_size), dtype=int)
 
@@ -139,7 +110,7 @@ class BacktrackingQueensSolver(PuzzleSolver):
         return region_map
 
     def _solve_backtracking_full(self, solution: np.ndarray, row: int, board_size: int,
-                               regions: Dict[int, Region], region_map: np.ndarray) -> bool:
+                               regions: dict[int, Region], region_map: np.ndarray) -> bool:
         """Backtracking with all constraints."""
         self.iteration_count += 1
 
@@ -182,7 +153,7 @@ class BacktrackingQueensSolver(PuzzleSolver):
         return False
 
     def _is_valid_full(self, solution: np.ndarray, row: int, col: int, board_size: int,
-                      regions: Dict[int, Region], region_map: np.ndarray) -> bool:
+                      regions: dict[int, Region], region_map: np.ndarray) -> bool:
         """Validate placement with all constraints."""
         # Check column constraint
         for r in range(row):
@@ -202,9 +173,9 @@ class BacktrackingQueensSolver(PuzzleSolver):
 
         for dr, dc in directions:
             nr, nc = row + dr, col + dc
-            if 0 <= nr < board_size and 0 <= nc < board_size:
-                if solution[nr, nc] == 1:
-                    return False
+            if (0 <= nr < board_size and 0 <= nc < board_size and
+                solution[nr, nc] == 1):
+                return False
 
         return True
 
@@ -220,14 +191,14 @@ class BacktrackingQueensSolver(PuzzleSolver):
 
         for dr, dc in directions:
             nr, nc = row + dr, col + dc
-            if 0 <= nr < board_size and 0 <= nc < board_size:
-                if solution[nr, nc] == 1:
-                    return False
+            if (0 <= nr < board_size and 0 <= nc < board_size and
+                solution[nr, nc] == 1):
+                return False
 
         return True
 
     def _post_validate_solution(self, solution: np.ndarray, board_size: int,
-                              regions: Dict[int, Region]) -> bool:
+                              regions: dict[int, Region]) -> bool:
         """Comprehensive validation of found solution."""
         # Check queen count
         if np.sum(solution) != board_size:

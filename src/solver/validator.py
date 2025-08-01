@@ -1,22 +1,20 @@
-"""
-Solution validation for Queens puzzles.
+"""Solution validation for Queens puzzles.
 """
 
-import numpy as np
 from typing import Dict, List
+
+import numpy as np
 
 from src.core.interfaces import SolutionValidator
 from src.core.models import Region
 
 
 class QueensSolutionValidator(SolutionValidator):
-    """
-    Comprehensive validator for Queens puzzle solutions.
+    """Comprehensive validator for Queens puzzle solutions.
     """
 
     def validate(self, solution: np.ndarray, regions: Dict[int, Region]) -> bool:
-        """
-        Validate a complete solution against all Queens rules.
+        """Validate a complete solution against all Queens rules.
         """
         if solution is None:
             return False
@@ -44,8 +42,7 @@ class QueensSolutionValidator(SolutionValidator):
 
     def validate_with_details(self, solution: np.ndarray,
                             regions: Dict[int, Region]) -> tuple[bool, List[str]]:
-        """
-        Validate solution and return detailed error messages.
+        """Validate solution and return detailed error messages.
         """
         errors = []
 

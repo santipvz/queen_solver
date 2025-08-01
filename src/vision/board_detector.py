@@ -1,26 +1,24 @@
+"""Advanced board detection using multiple computer vision techniques.
 """
-Advanced board detection using multiple computer vision techniques.
-"""
+
+from collections import Counter
+from typing import List, Tuple
 
 import cv2
 import numpy as np
-from typing import List, Tuple
-from collections import Counter
 
 from src.core.interfaces import BoardDetector
 
 
 class MultiMethodBoardDetector(BoardDetector):
-    """
-    Board detector that uses multiple methods for robust detection.
+    """Board detector that uses multiple methods for robust detection.
     """
 
     def __init__(self):
         self.common_sizes = [6, 7, 8, 9, 10, 11, 12]
 
     def detect_board_size(self, image: np.ndarray) -> int:
-        """
-        Detect board size using multiple methods and robust consensus.
+        """Detect board size using multiple methods and robust consensus.
         """
         # Method 1: Projection analysis
         projection_size = self._detect_size_by_projection(image)
@@ -105,8 +103,7 @@ class MultiMethodBoardDetector(BoardDetector):
         return suspected_size
 
     def detect_grid(self, image: np.ndarray, board_size: int) -> Tuple[List[int], List[int]]:
-        """
-        Create uniform grid based on detected board size.
+        """Create uniform grid based on detected board size.
         """
         height, width = image.shape[:2]
 
@@ -214,7 +211,7 @@ class MultiMethodBoardDetector(BoardDetector):
             kernel_size += 1
 
         kernel = np.ones(kernel_size) / kernel_size
-        smoothed = np.convolve(projection, kernel, mode='same')
+        smoothed = np.convolve(projection, kernel, mode="same")
 
         # Find local minima
         valleys = []

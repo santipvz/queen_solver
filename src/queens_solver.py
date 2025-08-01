@@ -1,38 +1,36 @@
-"""
-Queens Puzzle Solver - Main orchestrator class
+"""Queens Puzzle Solver - Main orchestrator class
 
 This module provides the main QueensSolver class that coordinates all
 components to solve Queens puzzles from images.
 """
 
+import os
+from typing import List, Optional
+
 import cv2
 import numpy as np
-import os
-import time
-from typing import Optional, Tuple, Dict, List
 
-from src.core.models import BoardInfo, PuzzleState, SolverResult, Region
-from src.vision.board_detector import MultiMethodBoardDetector
-from src.vision.region_extractor import ColorBasedRegionExtractor
+from src.core.models import BoardInfo, PuzzleState, SolverResult
 from src.solver.queens_solver import BacktrackingQueensSolver
 from src.solver.validator import QueensSolutionValidator
 from src.utils.visualizer import QueensResultVisualizer
+from src.vision.board_detector import MultiMethodBoardDetector
+from src.vision.region_extractor import ColorBasedRegionExtractor
 
 
 class QueensSolver:
-    """
-    Main orchestrator class for solving Queens puzzles from images.
+    """Main orchestrator class for solving Queens puzzles from images.
 
     This class coordinates all components including board detection,
     region extraction, puzzle solving, validation, and visualization.
     """
 
     def __init__(self, verbose: bool = True):
-        """
-        Initialize the Queen Solver with all necessary components.
+        """Initialize the Queen Solver with all necessary components.
 
         Args:
             verbose: Whether to print detailed progress information
+
         """
         self.verbose = verbose
 
@@ -51,8 +49,7 @@ class QueensSolver:
                         filename_prefix: Optional[str] = None,
                         generate_visualizations: bool = True,
                         quiet_mode: bool = False) -> bool:
-        """
-        Solve Queens puzzle from an image file.
+        """Solve Queens puzzle from an image file.
 
         Args:
             image_path: Path to the board image
@@ -63,6 +60,7 @@ class QueensSolver:
 
         Returns:
             True if puzzle was solved successfully, False otherwise
+
         """
         # Ensure output directory exists only if generating visualizations
         if generate_visualizations:
@@ -180,9 +178,9 @@ class QueensSolver:
                     horizontal_lines=h_lines,
                     vertical_lines=v_lines,
                     cell_height=cell_height,
-                    cell_width=cell_width
+                    cell_width=cell_width,
                 ),
-                regions={}
+                regions={},
             )
 
             return True
@@ -197,11 +195,11 @@ class QueensSolver:
         try:
             grid_lines = (
                 self.puzzle_state.board_info.horizontal_lines,
-                self.puzzle_state.board_info.vertical_lines
+                self.puzzle_state.board_info.vertical_lines,
             )
 
             regions = self.region_extractor.extract_regions(
-                image, grid_lines, self.puzzle_state.board_info.size
+                image, grid_lines, self.puzzle_state.board_info.size,
             )
 
             self.puzzle_state.regions = regions
@@ -214,7 +212,7 @@ class QueensSolver:
             # Validate regions
             if len(regions) != self.puzzle_state.board_info.size:
                 self.puzzle_state.validation_errors.append(
-                    f"Wrong number of regions: {len(regions)} (expected: {self.puzzle_state.board_info.size})"
+                    f"Wrong number of regions: {len(regions)} (expected: {self.puzzle_state.board_info.size})",
                 )
                 self.puzzle_state.is_solvable = False
                 if self.verbose:
@@ -232,7 +230,7 @@ class QueensSolver:
         try:
             self.solver_result = self.puzzle_solver.solve(
                 self.puzzle_state.board_info.size,
-                self.puzzle_state.regions
+                self.puzzle_state.regions,
             )
 
             self.puzzle_state.solution = self.solver_result.solution
@@ -257,7 +255,7 @@ class QueensSolver:
                 execution_time=0.0,
                 iterations=0,
                 validation_passed=False,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def _validate_solution(self) -> List[str]:
@@ -267,7 +265,7 @@ class QueensSolver:
         if self.puzzle_state.solution is not None:
             is_valid, errors = self.solution_validator.validate_with_details(
                 self.puzzle_state.solution,
-                self.puzzle_state.regions
+                self.puzzle_state.regions,
             )
 
             if not is_valid:
@@ -278,9 +276,8 @@ class QueensSolver:
                         print(f"   • {error}")
                     if len(errors) > 5:
                         print(f"   ... and {len(errors) - 5} more errors")
-            else:
-                if self.verbose:
-                    print("✅ Solution validation passed")
+            elif self.verbose:
+                print("✅ Solution validation passed")
         else:
             validation_errors.append("No solution to validate")
             if self.verbose:
@@ -294,7 +291,7 @@ class QueensSolver:
         try:
             grid_lines = (
                 self.puzzle_state.board_info.horizontal_lines,
-                self.puzzle_state.board_info.vertical_lines
+                self.puzzle_state.board_info.vertical_lines,
             )
 
             # Create main visualization
@@ -304,7 +301,7 @@ class QueensSolver:
                 grid_lines,
                 self.puzzle_state.regions,
                 output_dir,
-                filename_prefix
+                filename_prefix,
             )
 
             # Save main result with unique filename
@@ -320,7 +317,7 @@ class QueensSolver:
                 self.solver_result,
                 validation_errors,
                 output_dir,
-                filename_prefix
+                filename_prefix,
             )
 
             if self.verbose:
@@ -385,7 +382,7 @@ class QueensSolver:
         print(f"Regions detected: {len(self.puzzle_state.regions)}")
 
         # Solver results
-        print(f"\nSOLVER PERFORMANCE:")
+        print("\nSOLVER PERFORMANCE:")
         print(f"Success: {'Yes' if self.solver_result.success else 'No'}")
         print(f"Execution time: {self.solver_result.execution_time:.3f} seconds")
         print(f"Iterations: {self.solver_result.iterations:,}")
@@ -396,7 +393,7 @@ class QueensSolver:
 
         # Solution details
         if self.puzzle_state.solution is not None:
-            print(f"\nSOLUTION DETAILS:")
+            print("\nSOLUTION DETAILS:")
             queens_count = int(np.sum(self.puzzle_state.solution))
             print(f"Queens placed: {queens_count}/{board_info.size}")
 
@@ -412,7 +409,7 @@ class QueensSolver:
                 print(row_str)
 
         # Validation summary
-        print(f"\nVALIDATION SUMMARY:")
+        print("\nVALIDATION SUMMARY:")
         if not validation_errors:
             print("✅ All validation checks passed!")
             print("✅ Solution satisfies all Queens puzzle rules")
@@ -424,7 +421,7 @@ class QueensSolver:
                 print(f"   ... and {len(validation_errors) - 10} more errors")
 
         # Final verdict
-        print(f"\nFINAL RESULT:")
+        print("\nFINAL RESULT:")
         if self.solver_result.success and self.solver_result.validation_passed:
             print("🎉 PUZZLE SOLVED SUCCESSFULLY!")
         elif self.solver_result.success and not self.solver_result.validation_passed:

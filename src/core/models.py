@@ -1,15 +1,16 @@
-"""
-Data models for the Queen Solver system.
+"""Data models for the Queen Solver system.
 """
 
 from dataclasses import dataclass
-from typing import List, Tuple, Dict, Optional
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 
 
 @dataclass
 class BoardInfo:
     """Information about the detected board."""
+
     size: int
     image_shape: Tuple[int, int, int]
     horizontal_lines: List[int]
@@ -21,6 +22,7 @@ class BoardInfo:
 @dataclass
 class Region:
     """Represents a colored region on the board."""
+
     id: int
     positions: List[Tuple[int, int]]
     color: np.ndarray
@@ -33,6 +35,7 @@ class Region:
 @dataclass
 class PuzzleState:
     """Complete state of a Queens puzzle."""
+
     board_info: BoardInfo
     regions: Dict[int, Region]
     solution: Optional[np.ndarray] = None
@@ -47,6 +50,7 @@ class PuzzleState:
 @dataclass
 class SolverResult:
     """Result of solving a Queens puzzle."""
+
     success: bool
     solution: Optional[np.ndarray]
     execution_time: float

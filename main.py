@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Main entry point for the Queens Puzzle Solver application.
-"""
+"""Main entry point for the Queens Puzzle Solver application."""
 
 import sys
 import os
@@ -77,7 +75,7 @@ Examples:
         if success:
             print(f"\n✅ Results saved to: {args.output}/")
         else:
-            print(f"\n❌ Failed to solve puzzle")
+            print("\n❌ Failed to solve puzzle")
 
     return 0 if success else 1
 

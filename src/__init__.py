@@ -1,5 +1,4 @@
-"""
-Queen Solver Package
+"""Queen Solver Package
 Automatic solver for Queens puzzle using computer vision and backtracking algorithms.
 """
 
