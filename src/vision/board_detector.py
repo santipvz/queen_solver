@@ -83,8 +83,6 @@ class MultiMethodBoardDetector(BoardDetector):
 
         # Calculate what cell sizes would be for different board sizes
         for test_size in [9, 10, 11]:
-            cell_h = height / test_size
-            cell_w = width / test_size
 
             # Check if dimensions are more naturally divisible by 9 than 10
             h_remainder_9 = height % 9
