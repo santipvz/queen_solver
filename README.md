@@ -5,7 +5,7 @@ A sophisticated computer vision system for automatically solving colored queens 
 
 ## What is a Queens Puzzle?
 
-The Queens puzzle is a constraint satisfaction problem where you must place queens on a colored grid following these rules:
+The Queens puzzle is a constraint satisfaction problem popularized as a daily logic game on LinkedIn. The objective is to place queens on a colored grid so that:
 
 - **One queen per row, column, and colored region**
 - **No adjacent queens** (including diagonally)

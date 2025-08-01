@@ -1,5 +1,4 @@
-"""Advanced region extraction using color clustering and validation.
-"""
+"""Advanced region extraction using color clustering and validation."""
 
 from typing import Dict, List, Tuple
 
@@ -10,8 +9,7 @@ from src.core.models import Region
 
 
 class ColorBasedRegionExtractor(RegionExtractor):
-    """Extract regions based on color similarity with advanced validation.
-    """
+    """Extract regions based on color similarity with advanced validation."""
 
     def __init__(self, color_tolerance: int = 40):
         self.color_tolerance = color_tolerance
@@ -19,8 +17,7 @@ class ColorBasedRegionExtractor(RegionExtractor):
 
     def extract_regions(self, image: np.ndarray, grid_lines: Tuple[List[int], List[int]],
                        board_size: int) -> Dict[int, Region]:
-        """Extract colored regions with improved validation.
-        """
+        """Extract colored regions with improved validation."""
         h_lines, v_lines = grid_lines
 
         # Extract cell colors

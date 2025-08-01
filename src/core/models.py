@@ -1,5 +1,4 @@
-"""Data models for the Queen Solver system.
-"""
+"""Data models for the Queen Solver system."""
 
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple

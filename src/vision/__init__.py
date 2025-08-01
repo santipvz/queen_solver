@@ -1,2 +1,1 @@
-"""Computer vision module for image processing and board detection.
-"""
+"""Computer vision module for image processing and board detection."""

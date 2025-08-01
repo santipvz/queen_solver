@@ -1,5 +1,4 @@
-"""Advanced visualization for Queens puzzle solutions.
-"""
+"""Advanced visualization for Queens puzzle solutions."""
 
 import os
 from typing import Dict, List, Optional, Tuple
@@ -13,8 +12,7 @@ from src.core.models import Region
 
 
 class QueensResultVisualizer(ResultVisualizer):
-    """Advanced visualizer for Queens puzzle results.
-    """
+    """Advanced visualizer for Queens puzzle results."""
 
     def __init__(self):
         self.region_colors = [
@@ -47,8 +45,7 @@ class QueensResultVisualizer(ResultVisualizer):
                  grid_lines: Tuple[List[int], List[int]],
                  regions: Dict[int, Region], output_dir: str = "output",
                  filename_prefix: str = "board") -> np.ndarray:
-        """Create comprehensive visualization of the solution.
-        """
+        """Create visualization of the solution."""
         fig, axes = plt.subplots(2, 2, figsize=(16, 16))
 
         # 1. Original image

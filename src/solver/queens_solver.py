@@ -199,7 +199,7 @@ class BacktrackingQueensSolver(PuzzleSolver):
 
     def _post_validate_solution(self, solution: np.ndarray, board_size: int,
                               regions: dict[int, Region]) -> bool:
-        """Comprehensive validation of found solution."""
+        """Validation of found solution."""
         # Check queen count
         if np.sum(solution) != board_size:
             return False

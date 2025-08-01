@@ -120,7 +120,7 @@ class QueensSolver:
             # Step 7: Show results
             if self.verbose:
                 print("\n📋 STEP 7: Results summary...")
-                self._print_comprehensive_summary(validation_errors)
+                self._print_summary(validation_errors)
             elif not quiet_mode:
                 self._print_simple_summary()
             else:
@@ -368,10 +368,10 @@ class QueensSolver:
         else:
             print(f"❌ No solution ({board_info.size}x{board_info.size}, {self.solver_result.execution_time:.3f}s)")
 
-    def _print_comprehensive_summary(self, validation_errors: List[str]) -> None:
-        """Print comprehensive summary of results."""
+    def _print_summary(self, validation_errors: List[str]) -> None:
+        """Print summary of results."""
         print("\n" + "=" * 60)
-        print("QUEENS PUZZLE SOLVER - COMPREHENSIVE RESULTS")
+        print("QUEENS PUZZLE SOLVER - RESULTS")
         print("=" * 60)
 
         # Basic information

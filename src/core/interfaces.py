@@ -1,5 +1,4 @@
-"""Base interfaces and abstract classes for the Queen Solver system.
-"""
+"""Base interfaces and abstract classes for the Queen Solver system."""
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
