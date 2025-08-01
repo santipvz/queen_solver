@@ -14,7 +14,7 @@ from src.core.models import BoardInfo, PuzzleState, SolverResult
 from src.solver.queens_solver import BacktrackingQueensSolver
 from src.solver.validator import QueensSolutionValidator
 from src.utils.visualizer import QueensResultVisualizer
-from src.vision.board_detector import MultiMethodBoardDetector
+from src.vision.board_detector import EdgeDetectionBoardDetector
 from src.vision.region_extractor import ColorBasedRegionExtractor
 
 
@@ -35,7 +35,7 @@ class QueensSolver:
         self.verbose = verbose
 
         # Initialize all components
-        self.board_detector = MultiMethodBoardDetector()
+        self.board_detector = EdgeDetectionBoardDetector()
         self.region_extractor = ColorBasedRegionExtractor()
         self.puzzle_solver = BacktrackingQueensSolver()
         self.solution_validator = QueensSolutionValidator()
@@ -157,6 +157,12 @@ class QueensSolver:
         try:
             # Detect board size
             board_size = self.board_detector.detect_board_size(image)
+
+            # Check if board is valid for Queens puzzle
+            if board_size == 0:
+                print("❌ Invalid board detected: Non-square boards cannot be solved with Queens puzzle rules")
+                return False
+
             if self.verbose:
                 print(f"✅ Board size detected: {board_size}x{board_size}")
 
